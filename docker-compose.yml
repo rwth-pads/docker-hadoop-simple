@@ -1,0 +1,17 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+#version: '2'
+
+services:
+  hadoop:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: custom-hadoop
+    container_name: hadoop
+    user: root
+    ports:
+      - '8080:50070'
+    volumes:
+      - ./mounted-data:/data

@@ -5,7 +5,7 @@ docker compose up
 # in a separate shell
 docker exec -it hadoop bash
 
-# in interactive shell
+# in interactive shell on container
 cd /data
 hadoop fs -mkdir /data
 hadoop fs -put ./funny-story.txt /data/funny-story.txt

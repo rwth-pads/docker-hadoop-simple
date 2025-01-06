@@ -1,16 +1,41 @@
-#version: '2'
+x-base-img: &base-img
+    # switch comments to build locally
+    # build: ./hadoop-base-img
+    # image: hadoop-base-img
+    image: leahtgu/hadoop-base-img:latest
 
 services:
-  hadoop:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    image: custom-hadoop
+  namenode:
+    <<: *base-img
     container_name: hadoop
-    user: root
     ports:
-      - '8080:50070'
+      - "9870:9870"
+      - "8088:8088"
+    command: >
+      bash -c "hdfs namenode & yarn resourcemanager "
+    hostname: hdfs-namenode
     volumes:
-      - ./mounted-data:/data
-    #command: /etc/bootstrap.sh -bash
-      
+      - ./mounted-data:/mounted-data
+
+  datanode:
+    <<: *base-img
+    hostname: datanode
+    container_name: hadoop-datanode
+    depends_on:
+      - namenode
+    command: >
+      bash -c "hdfs datanode & yarn nodemanager "
+    ports:
+      # The host port is randomly assigned by Docker, to allow scaling to multiple DataNodes on the same host
+      - "9864"
+    links:
+      - namenode:hdfs-namenode
+
+  secondarynamenode:
+    <<: *base-img
+    container_name: hadoop-secondary
+    command: hdfs secondarynamenode
+    ports:
+      - "9868:9868"
+    links:
+      - namenode:hdfs-namenode

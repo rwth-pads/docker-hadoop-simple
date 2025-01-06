@@ -1,0 +1,7 @@
+mounted-data/*
+!mounted-data/commands.txt
+!mounted-data/funny-story.txt
+!mounted-data/test.sh
+!mounted-data/word_mapper.py
+!mounted-data/word_reducer.py
+!mounted-data/wordcount.py
